@@ -45,8 +45,8 @@
               {!! $post->content !!}
 
               <div class="gap-xy-2 mt-6">
-                @foreach ($post->tags->pluck('name') as $tag)
-                  <a class="badge badge-pill badge-secondary" href="#">{{ $tag }}</a>
+                @foreach ($post->tags as $tag)
+                  <a class="badge badge-pill badge-secondary" href="{{ route('blog.tag', $tag->id) }}">{{ $tag->name }}</a>
                 @endforeach
               </div>
 

@@ -21,11 +21,25 @@ class PostsController extends Controller
 
     public function tag(Tags $tag)
     {
-        return view('tag')->with('tag', $tag)->with('posts', $tag->posts()->simplePaginate(2))->with('categories', Category::all())->with('tags', Tags::all());
+        $topPosts = Post::orderBy('views', 'desc')->searched()->take(5)->get();
+
+        return view('tag')
+        ->with('tag', $tag)
+        ->with('posts', $tag->posts()->searched()->simplePaginate(2))
+        ->with('categories', Category::all())
+        ->with('tags', Tags::all())
+        ->with('topPosts', $topPosts);
     }
 
     public function category(Category $category)
     {
-        return view('category')->with('category', $category)->with('posts', $category->posts()->simplePaginate(2))->with('categories', Category::all())->with('tags', Tags::all());
+        $topPosts = Post::orderBy('views', 'desc')->searched()->take(5)->get();
+
+        return view('category')
+            ->with('category', $category)
+            ->with('posts', $category->posts()->searched()->simplePaginate(2))
+            ->with('categories', Category::all())
+            ->with('tags', Tags::all())
+            ->with('topPosts', $topPosts);
     }
 }

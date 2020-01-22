@@ -10,18 +10,11 @@ use Illuminate\Http\Request;
 class WelcomeController extends Controller
 {
     public function index() {
-        if ($search = request()->query('search')) {
-            $posts = Post::where('title', 'LIKE', "%{$search}%")->simplePaginate(2);
-        }
-        else {
-            $posts = Post::simplePaginate(2);
-        }
-
-        $topPosts = Post::orderBy('views', 'desc')->take(5)->get();
+        $topPosts = Post::orderBy('views', 'desc')->searched()->take(5)->get();
         
         return view('welcome')
         ->with('categories', Category::all())
-        ->with('posts', $posts)
+        ->with('posts', Post::searched()->simplePaginate(2))
         ->with('tags', Tags::all())
         ->with('topPosts', $topPosts);
     }

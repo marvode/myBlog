@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.1/trix.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+@endsection
+
 @section('content')
     <div class="card card-default">
         <div class="card-header">
@@ -21,8 +27,9 @@
                     <textarea class="form-control" name="description" placeholder="Description" rows="5">{{ isset($post) ? "$post->description" : "" }}</textarea>
                 </div>
                 <div class="form-group">
-                    <label for="content" hidden>Content</label>
-                    <textarea class="form-control" name="content" placeholder="Content" rows="10">{{ isset($post) ? "$post->content" : "" }}</textarea>
+                    <label for="content">Content</label>
+                    <input type="hidden" name="content" id="content" value="{!! isset($post) ? "$post->content" : "" !!}">
+                    <trix-editor input="content"></trix-editor>
                 </div>
                 <div class="form-group">
                     <label for="category" hidden>Category</label>
@@ -36,7 +43,7 @@
                 @if ($tags->count() > 0)
                     <div class="form-group">
                         <label for="tags">Select Tags</label>
-                        <select name="tags[]" id="tags" class="form-control" multiple>
+                        <select name="tags[]" id="tags_selector" class="form-control" multiple>
                             @foreach ($tags as $tag)
                                 <option value="{{ $tag->id }}" 
                                     @isset($post)
@@ -50,7 +57,7 @@
                 @endif
                 <div class="form-group">
                     <label for="published_at" hidden>Published At</label>
-                    <input class="form-control" name="published_at" type="text" placeholder="Published At">
+                    <input class="form-control" name="published_at" id="published_at" type="text" placeholder="Published At" value="{{ isset($post) ? "$post->published_at" : now() }}">
                 </div>
                     @if(isset($post))
                         <div class="form-group">
@@ -67,4 +74,20 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.1/trix.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr('#published_at', {
+            enableTime: true,
+            enableSeconds: true,
+        });
+
+        $(document).ready(function() {
+            $('#tags_selector').select2();
+        });
+    </script>
 @endsection
